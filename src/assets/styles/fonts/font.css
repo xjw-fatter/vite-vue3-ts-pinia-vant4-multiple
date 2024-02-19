@@ -1,0 +1,19 @@
+@font-face {
+  font-family: Oswald-Medium;
+  src: url('Oswald-Medium.ttf');
+}
+
+@font-face {
+  font-family: OPPOSans-H-Num;
+  src: url('OPPOSans-H-Num.ttf');
+}
+
+.oswald-medium {
+  /* stylelint-disable-next-line font-family-no-missing-generic-family-keyword */
+  font-family: Oswald-Medium;
+}
+
+.oppo-sans-h-num {
+  /* stylelint-disable-next-line font-family-no-missing-generic-family-keyword */
+  font-family: OPPOSans-H-Num;
+}
