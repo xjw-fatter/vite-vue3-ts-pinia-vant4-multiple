@@ -2,13 +2,23 @@
 
 This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
 
+## Run
 ```
 npm install pnpm -g
 pnpm i
 pnpm run dev
-
 pnpm run dev:子项目
 ```
+# 环境依赖版本
+
+-   [node](https://github.com/nodejs/node)：v16.13.0
+-   [vite](https://github.com/vitejs/vite)：^3.1.0
+-   [vue](https://github.com/vuejs/vue)：^3.2.37
+-   [typescript](https://github.com/microsoft/TypeScript)：^4.6.4
+-   [pinia](https://github.com/vuejs/pinia)：^2.1.7
+-   [vue-router](https://github.com/vuejs/router)：^4.1.6
+-   [vueuse](https://github.com/vueuse/vueuse)：^10.8.0
+-   [vant](https://github.com/vueuse/vueuse)：^4.8.4
 
 ## Recommended IDE Setup
 
