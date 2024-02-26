@@ -11,6 +11,7 @@ import PostCssPxToViewport from 'postcss-px-to-viewport-8-plugin';
 import legacy from '@vitejs/plugin-legacy';
 import { viteVConsole } from 'vite-plugin-vconsole';
 import VitePluginVueMyConsole from './src/common/utils/myConsole.plugin';
+// import customComponentsResolver from './src/common/utils/customComponentsResolver';
 
 const postCssOptions = {
   unitToConvert: 'px', // 需要转换的单位，默认为 px
@@ -106,6 +107,7 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
       VueSetupExtend(),
       Components({
         // dirs: ['src/common/components'],
+        // dirs: [join(mode === 'development' ? `src/projects/${PROJECT}/` : '', 'src') + '/components'], // 按需加载的文件夹
         extensions: ['vue'],
         dts: resolve(__dirname, 'types/components.d.ts'),
         resolvers: [VantResolver(), VueUseComponentsResolver()],

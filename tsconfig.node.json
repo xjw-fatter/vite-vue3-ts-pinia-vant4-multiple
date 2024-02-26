@@ -5,5 +5,5 @@
         "moduleResolution": "Node",
         "allowSyntheticDefaultImports": true
     },
-    "include": ["vite.config.ts", "src/common/utils/myConsole.plugin.ts"]
+    "include": ["vite.config.ts", "src/common/utils/myConsole.plugin.ts", "src/common/utils/customComponentsResolver.ts"]
 }

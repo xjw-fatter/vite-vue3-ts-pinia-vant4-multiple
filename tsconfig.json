@@ -19,6 +19,6 @@
         "typeRoots": ["node_modules/@types", "types"],
         "skipLibCheck": true
     },
-    "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "types/**/*.ts", "src/common/utils/myConsole.plugin.ts"],
+    "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "types/**/*.ts", "src/common/utils/myConsole.plugin.ts", "components.d.ts"],
     "references": [{ "path": "./tsconfig.node.json" }]
 }
