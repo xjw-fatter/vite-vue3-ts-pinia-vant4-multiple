@@ -24,15 +24,6 @@ pnpm run dev:子项目
 
 - [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
 
-## Type Support For `.vue` Imports in TS
-
-Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates. However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can enable Volar's Take Over mode by following these steps:
-
-1. Run `Extensions: Show Built-in Extensions` from VS Code's command palette, look for `TypeScript and JavaScript Language Features`, then right click and select `Disable (Workspace)`. By default, Take Over mode will enable itself if the default TypeScript extension is disabled.
-2. Reload the VS Code window by running `Developer: Reload Window` from the command palette.
-
-You can learn more about Take Over mode [here](https://github.com/johnsoncodehk/volar/discussions/471).
-
 # 项目相关说明
 项目模版 默认打包subTemplate目录项目，更换支持ts的语法高亮插件 Volar 以取代 Vetur
 
@@ -62,7 +53,7 @@ Component name "home" should always be multi-word.eslint-plugin-vue
 ```
 
 2. router计数有误，页面切换会乱 ✅ 页面切换动画也会有问题
-```
+
 -  最新路由跳转相关 --- 20240223
 -   返回首页 backHome
 -   返回上一页 backward
@@ -137,9 +128,7 @@ export function routerCountAndDirection(router: Router) {
     }, 0);
   });
 }
-```
 
-```
 /**
  * backward 回退上一级，如果没有上一级就退出页面
  */
@@ -177,7 +166,6 @@ export function historyGo(step: number): void {
   sessionStorage.setItem('countAll', String(historyCountAll - step + 1)); // 计数有误修正
   history.go(-step);
 }
-```
 ```
 3. unplugin-vue-components  ❌
 ```
@@ -244,12 +232,11 @@ auto-install-peers=true
 ```
 
 # fix.build.html.js
-打包后处理dist目录
+打包后处理dist目录说明：  
 
-说明：
-1:打包后将index.html从对应子项目目录移动到dist根目录并调整index.html中资源引用路径
-2:deleteExtraLib 删除public/lib中非当前子项目的资源文件，避免dist中存在其它子项目资源文件
-  2.1:需注意原lib文件目录中已有的文件资源暂时不用变更，后续有对应项目单独处理修改后修改文件路径地址
-	2.2:后续在lib下新增assets目录 对应子项目资源统一放到assets/子项目名/...  例如有新的子项目AAA 则AAA需要放到public的资源文件 路径如下 lib/assets/AAA/
-	2.3:fix.build.html.js中 deleteExtraLib中 const mls = ['dist/lib/assets']; 将会在打包完成后 递归删除dist/lib/assets下非当前子项目的文件和目录
-	2.4:资源目录名需要与当前子项目名一致 
+1. 打包后将index.html从对应子项目目录移动到dist根目录并调整index.html中资源引用路径
+2. deleteExtraLib 删除public/lib中非当前子项目的资源文件，避免dist中存在其它子项目资源文件
+	- 需注意原lib文件目录中已有的文件资源暂时不用变更，后续有对应项目单独处理修改后修改文件路径地址
+	- 后续在lib下新增assets目录 对应子项目资源统一放到assets/子项目名/...  例如有新的子项目AAA 则AAA需要放到public的资源文件 路径如下 lib/assets/AAA/
+	- fix.build.html.js中 deleteExtraLib中 const mls = ['dist/lib/assets']; 将会在打包完成后 递归删除dist/lib/assets下非当前子项目的文件和目录
+	- 资源目录名需要与当前子项目名一致 
