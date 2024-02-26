@@ -47,7 +47,7 @@ export default function VitePluginVueMyConsole(options: VitePluginVueMyConsoleOp
               callee.object?.type === 'Identifier' &&
               callee.object?.name === 'console' &&
               callee.property?.type === 'Identifier' &&
-              callee.property?.name === 'log'
+              ['log', 'warn', 'error', 'info'].includes(callee.property?.name)
             ) {
               // 是console.log
               const fileName = basename(id); // 当前console所在文件名

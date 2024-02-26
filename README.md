@@ -53,63 +53,121 @@ Component name "home" should always be multi-word.eslint-plugin-vue
 
 2. router计数有误，页面切换会乱 ✅ 页面切换动画也会有问题
 ```
-如果使用router.replace时请在query参数上携带replace参数，push时请勿携带 需要时间戳的 则addTimertampParams添加一下
-中间有多次连续replace时  返回时只会走一次beforeEach 此时会有问题
-参考：
-···
-  router.replace({
-    path: '/scoreMall/goodsDetail',
-    query: addTimertampParams({ id, replace: 1 }),
-  });
+-  最新路由跳转相关 --- 20240223
+-   返回首页 backHome
+-   返回上一页 backward
+-   返回指定步数 historyGo
 
-// 页面过渡动画
-const storage = window.sessionStorage;
-storage.clear();
+```
+export function routerCountAndDirection(router: Router) {
+  // 页面过渡动画
+  const storage = window.sessionStorage;
+  storage.clear();
 
-let historyCount = storage.getItem('count') || 0; // 历史页面数量
-storage.setItem('/', '0');
+  let historyCount = storage.getItem('count') || 0; // 历史页面数量
+  storage.setItem('/', '0');
 
-router.beforeEach((to, from, next) => {
-  const toIndex = storage.getItem(to.fullPath);
-  const fromIndex = storage.getItem(from.fullPath);
-  const historyCountAll = Number(storage.getItem('countAll')) || 0;
-  const historyCountReplace = Number(storage.getItem('countReplace')) || 0;
-  const useCommonStore = commonStore();
+  routerEventRegister(router); // 劫持路由事件
 
-  if (to.meta && to.meta.keepAlive) {
-    useCommonStore.keepAlive(to.name);
-  }
+  router.beforeEach((to, from, next) => {
+    console.log(to, from);
+    const toIndex = storage.getItem(to.fullPath);
+    const fromIndex = storage.getItem(from.fullPath);
+    const historyCountAll = Number(storage.getItem('countAll')) || 0;
+    const useCommonStore = commonStore();
 
-  if (toIndex) {
-    //上一页
-    if (fromIndex === null || !fromIndex) {
-      // 入口页不过渡
-      useCommonStore.updateDirection('');
-    } else if (Number(toIndex) < Number(fromIndex)) {
-      useCommonStore.updateDirection('out');
-      historyCountAll > 1 && storage.setItem('countAll', String(historyCountAll - 1));
-      if (from.query.replace && historyCountReplace) {
-        storage.setItem('countReplace', String(historyCountReplace - 1)); // 返回记录减1 中间有多次连续replace时 返回时只会走一次 此时会有问题 无解
+    to.meta && to.meta.keepAlive && useCommonStore.keepAlive(to.name); // keepAlive
+
+    if (toIndex) {
+      // 上一页
+      if (fromIndex === null || !fromIndex) {
+        useCommonStore.updateDirection(''); // 入口页不过渡
+      } else if (Number(toIndex) < Number(fromIndex)) {
+        // 考虑replace跳转的情况
+        useCommonStore.updateDirection('out');
+        historyCountAll > 1 && storage.setItem('countAll', String(historyCountAll - 1));
+      } else {
+        useCommonStore.updateDirection('in');
+        if (myHistoty.action !== routerEventConfig.replaceName) {
+          storage.setItem('countAll', String(historyCountAll + 1)); // 不是replace的 countAll数量+1
+        }
       }
     } else {
-      useCommonStore.updateDirection('in');
-      storage.setItem('countAll', String(historyCountAll + 1));
+      // 下一页
+      historyCount = Number(historyCount) + 1; // 总数+1
+      storage.setItem('count', String(historyCount));
+      to.fullPath !== '/' && storage.setItem(to.fullPath, String(historyCount));
+
+      if (myHistoty.action !== routerEventConfig.replaceName) {
+        storage.setItem('countAll', String(historyCountAll + 1));
+      }
+      useCommonStore.updateDirection(!from.name ? '' : 'in'); // 入口页不过渡 否则为进场动画
     }
+
+    useCommonStore.clearToken(); // 页面切换取消请求
+    next();
+  });
+
+  router.afterEach((to) => {
+    setTimeout(() => {
+      to.meta && to.meta.title && (document.title = to.meta.title as string);
+      // ios native title 设置不生效的 hack
+      if (/iP(ad|hone|od)/.test(window.navigator.userAgent)) {
+        const iframe = document.createElement('iframe');
+        iframe.style.visibility = 'hidden';
+        iframe.style.width = '1px';
+        iframe.style.height = '1px';
+        iframe.onload = function () {
+          setTimeout(function () {
+            document.body.removeChild(iframe);
+          }, 0);
+        };
+        document.body.appendChild(iframe);
+      }
+    }, 0);
+  });
+}
+```
+
+```
+/**
+ * backward 回退上一级，如果没有上一级就退出页面
+ */
+export function backward(): void {
+  const historyCountAll = Number(sessionStorage.getItem('countAll')) || 0;
+  if (historyCountAll - 1 > 0) {
+    history.go(-1);
   } else {
-    // 下一页
-    historyCount = Number(historyCount) + 1; // 总数+1
-    storage.setItem('count', String(historyCount));
-    to.fullPath !== '/' && storage.setItem(to.fullPath, String(historyCount));
-    if (to.query.replace) {
-      storage.setItem('countReplace', String(historyCountReplace + 1)); // replace的记录增加一次
-    } else {
-      storage.setItem('countAll', String(historyCountAll + 1)); // replace的不增加计数
-    }
-    useCommonStore.updateDirection(!from.name ? '' : 'in'); // 入口页不过渡 否则为进场动画
+    bridgeInvoke.closeWebView(); // 没有历史记录，关闭webview
   }
-  useCommonStore.clearToken(); // 页面切换取消请求
-  next();
-});
+}
+
+/**
+ * backHome 返回到入口页(项目首页)
+ */
+export function backHome(): void {
+  const historyCountAll = Number(sessionStorage.getItem('countAll')) || 0;
+
+  if (historyCountAll >= 2) {
+    const backStep = historyCountAll - 1;
+    history.go(-backStep);
+    // 返回多步时 router.beforeEach守卫只走一次 此时守卫中减去1步会有问题
+    sessionStorage.setItem('countAll', '1');  // 计数有误修正
+  } else {
+    bridgeInvoke.closeWebView(); // 已经在首页了 直接关闭webview
+  }
+}
+
+/**
+ * historyGo 返回指定步数
+ */
+export function historyGo(step: number): void {
+  if (step <= 1) return history.go(-step);
+  const historyCountAll = Number(sessionStorage.getItem('countAll')) || 0; // step > 2时 返回多步 router.beforeEach守卫只走一次 
+  sessionStorage.setItem('countAll', String(historyCountAll - step + 1)); // 计数有误修正
+  history.go(-step);
+}
+```
 ```
 3. unplugin-vue-components  ❌
 ```

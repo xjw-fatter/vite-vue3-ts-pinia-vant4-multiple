@@ -26,6 +26,6 @@ const invoke = <T = any>(api: string, params: any = {}, success?: Function) => {
 
 export default {
   getInfo: () => invoke<UserInfo>('TestInfo'),
-  aaa: (params: any) => invoke('aaa', params),
+  aaa: (params: any, success?: Function) => invoke('aaa', params, success),
   bbb: () => invoke('bbb'),
 };

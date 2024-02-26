@@ -1,6 +1,7 @@
 import { createRouter, RouteRecordRaw, createWebHashHistory } from 'vue-router';
 import { routerCountAndDirection } from '@/common/utils';
 import pActivityRoute from './pActivity.route';
+import pTestRoute from './pTest.route';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -11,10 +12,11 @@ const routes: Array<RouteRecordRaw> = [
       keepAlive: false,
     },
     component: () => import('../views/pageQuickIn.vue'),
-    redirect: '/scoreMall/timeLimitBuy',
+    // redirect: '/test/test',
     children: [],
   },
   ...pActivityRoute,
+  ...pTestRoute,
 ];
 
 const router = createRouter({

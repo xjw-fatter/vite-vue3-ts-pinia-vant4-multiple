@@ -1,6 +1,6 @@
 import { Router } from 'vue-router';
 import commonStore from '../store/common.store';
-
+import routerEventRegister, { myHistoty, routerEventConfig } from './routerEventRegister';
 /**
  * 路由切换动画计数
  * @param router
@@ -13,44 +13,41 @@ export function routerCountAndDirection(router: Router) {
   let historyCount = storage.getItem('count') || 0; // 历史页面数量
   storage.setItem('/', '0');
 
+  routerEventRegister(router); // 劫持路由事件
+
   router.beforeEach((to, from, next) => {
     const toIndex = storage.getItem(to.fullPath);
     const fromIndex = storage.getItem(from.fullPath);
     const historyCountAll = Number(storage.getItem('countAll')) || 0;
-    const historyCountReplace = Number(storage.getItem('countReplace')) || 0;
     const useCommonStore = commonStore();
 
-    if (to.meta && to.meta.keepAlive) {
-      useCommonStore.keepAlive(to.name);
-    }
+    to.meta && to.meta.keepAlive && useCommonStore.keepAlive(to.name); // keepAlive
 
     if (toIndex) {
-      //上一页
+      // 上一页
       if (fromIndex === null || !fromIndex) {
-        // 入口页不过渡
-        useCommonStore.updateDirection('');
+        useCommonStore.updateDirection(''); // 入口页不过渡
       } else if (Number(toIndex) < Number(fromIndex)) {
+        // 考虑replace跳转的情况
         useCommonStore.updateDirection('out');
         historyCountAll > 1 && storage.setItem('countAll', String(historyCountAll - 1));
-        if (from.query.replace && historyCountReplace) {
-          storage.setItem('countReplace', String(historyCountReplace - 1)); // 返回记录减1 中间有多次连续replace时 返回时只会走一次 此时会有问题
-        }
       } else {
         useCommonStore.updateDirection('in');
-        storage.setItem('countAll', String(historyCountAll + 1));
+        if (myHistoty.action !== routerEventConfig.replaceName) {
+          storage.setItem('countAll', String(historyCountAll + 1)); // 不是replace的 countAll数量+1
+        }
       }
     } else {
       // 下一页
       historyCount = Number(historyCount) + 1; // 总数+1
       storage.setItem('count', String(historyCount));
       to.fullPath !== '/' && storage.setItem(to.fullPath, String(historyCount));
-      if (to.query.replace) {
-        storage.setItem('countReplace', String(historyCountReplace + 1)); // replace的记录增加一次
-      } else {
-        storage.setItem('countAll', String(historyCountAll + 1)); // replace的不增加计数
+      if (myHistoty.action !== routerEventConfig.replaceName) {
+        storage.setItem('countAll', String(historyCountAll + 1));
       }
       useCommonStore.updateDirection(!from.name ? '' : 'in'); // 入口页不过渡 否则为进场动画
     }
+
     useCommonStore.clearToken(); // 页面切换取消请求
     next();
   });

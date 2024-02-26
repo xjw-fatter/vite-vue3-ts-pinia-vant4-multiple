@@ -13,7 +13,7 @@
   </div>
 </template>
 
-<script setup lang="ts" name="TimeLimitBuy">
+<script setup lang="ts" name="Test">
 // components
 // import Header from '@/common/components/Header.vue';
 // utils

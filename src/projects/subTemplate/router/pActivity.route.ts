@@ -1,17 +1,17 @@
 import { RouteRecordRaw } from 'vue-router';
 
 // 限时秒杀
-const timeLimitBuy = (): any => import('../views/pActivity/timeLimitBuy.vue');
+const test = (): any => import('../views/pActivity/timeLimitBuy.vue');
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/scoreMall/timeLimitBuy',
-    name: 'TimeLimitBuy',
+    path: '/test/test',
+    name: 'Test',
     meta: {
       title: '限时秒杀',
       keepAlive: false,
     },
-    component: timeLimitBuy,
+    component: test,
   },
 ];
 export default routes;

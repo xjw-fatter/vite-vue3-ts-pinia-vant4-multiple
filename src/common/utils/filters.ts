@@ -55,7 +55,7 @@ export function addZero(time: number): string {
   return time < 10 ? `0${time}` : `${time}`;
 }
 
-//格式化租借时间
+// 格式化时间
 export function formatShowLeaseTime(minutes: number) {
   if (!minutes) return '0分钟';
   const hourNum = parseInt(String(Math.floor(accDiv(minutes, 60))));

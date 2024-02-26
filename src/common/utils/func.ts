@@ -325,26 +325,19 @@ export function backHome(): void {
     history.go(-backStep);
     // 返回多步时 router.beforeEach守卫只走一次 此时减去1步 会计数错误 因此 返回首页时直接重置为2 守卫只走一次会减少到1 replace记录也重置0
     sessionStorage.setItem('countAll', '1');
-    sessionStorage.setItem('countReplace', '0');
   } else {
     bridgeInvoke.bbb(); // 已经在首页了 直接关闭webview
   }
 }
 
 /**
- * historyGo 返回指定步数(项目首页) replaceCount 中间replace的次数
+ * historyGo 返回指定步数(项目首页)
  */
-export function historyGo(step: number, replaceCount = 0): void {
+export function historyGo(step: number): void {
   if (step <= 1) return history.go(-step);
   // step > 2时 返回多步 router.beforeEach守卫只走一次
   const historyCountAll = Number(sessionStorage.getItem('countAll')) || 0;
   sessionStorage.setItem('countAll', String(historyCountAll - step + 1));
-
-  // 返回的层级中有使用过router.replace的次数
-  if (replaceCount) {
-    const historyCountReplace = Number(sessionStorage.getItem('countReplace')) || 0;
-    historyCountReplace && sessionStorage.setItem('countReplace', String(historyCountReplace - replaceCount)); // 返回减去相应的replace次数
-  }
   history.go(-step);
 }
 
@@ -394,7 +387,7 @@ export async function bridgeInvokeCheck(options: BridgeInvokeCheckOptions) {
       action_name: options.actionName,
       action_version: options.actionVersion || '1',
     });
-    if (canIUse === '0') return;
+    if (!canIUse) return;
     bridgeInvoke[options.actionName](options.params || {}, options.success);
   } catch (error) {
     showToast(`bridgeInvokeCheck--error:${JSON.stringify(error)}`);
