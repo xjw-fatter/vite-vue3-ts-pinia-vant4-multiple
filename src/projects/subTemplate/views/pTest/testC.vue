@@ -18,8 +18,8 @@ const close = () => {
 onMounted(() => {});
 const router = useRouter();
 const testToD = () => {
-  // router.push({ path: '/test/testD' });
-  router.replace({ path: '/test/testD' });
+  // router.push({ path: '/pTest/testD' });
+  router.replace({ path: '/pTest/testD' });
 };
 </script>
 

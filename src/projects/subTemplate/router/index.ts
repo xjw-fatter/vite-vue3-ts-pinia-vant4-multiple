@@ -1,7 +1,8 @@
 import { createRouter, RouteRecordRaw, createWebHashHistory } from 'vue-router';
-import { routerCountAndDirection } from '@/common/utils';
-import pActivityRoute from './pActivity.route';
-import pTestRoute from './pTest.route';
+import { generateRoutes, routerCountAndDirection } from '@/common/utils';
+import pageMates from './pages.meta';
+// import pActivityRoute from './pActivity.route';
+// import pTestRoute from './pTest.route';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -15,8 +16,10 @@ const routes: Array<RouteRecordRaw> = [
     // redirect: '/test/test',
     children: [],
   },
-  ...pActivityRoute,
-  ...pTestRoute,
+  // ...pActivityRoute,
+  // ...pTestRoute,
+  ...generateRoutes(import.meta.glob('../views/pTest/**/*.vue'), pageMates),
+  ...generateRoutes(import.meta.glob('../views/pActivity/**/*.vue'), pageMates),
 ];
 
 const router = createRouter({

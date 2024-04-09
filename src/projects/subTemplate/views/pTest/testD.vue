@@ -18,7 +18,7 @@ const close = () => {
 onMounted(() => {});
 const router = useRouter();
 const testToE = () => {
-  router.push({ path: '/test/testE' });
+  router.push({ path: '/pTest/testE' });
 };
 </script>
 

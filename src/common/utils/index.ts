@@ -5,6 +5,7 @@ export * from './statisticalData';
 export * from './createInterceptor';
 export * from './routerCountAndDirection';
 export * from './time.filter';
+export * from './generateRoutes';
 export { default as bridgeInvoke } from './bridge';
 export { default as directives } from './directives';
 export type { mittEvents } from './emitter';

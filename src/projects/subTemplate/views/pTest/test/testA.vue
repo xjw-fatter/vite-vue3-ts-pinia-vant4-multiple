@@ -7,8 +7,8 @@
   </div>
 </template>
 
-<script setup lang="ts" name="TestA">
-import { emitter, backward } from '@/common/utils/index';
+<script setup lang="ts" name="TestTestA">
+import { emitter, backward, addTimertampParams } from '@/common/utils/index';
 import commonStore from '@/common/store/common.store';
 // 顶部图片
 const useCommonStore = commonStore();
@@ -36,7 +36,7 @@ onMounted(() => {
 
 const router = useRouter();
 const testToB = () => {
-  router.push({ path: '/pTest/testB' });
+  router.push({ path: '/pTest/testB', query: addTimertampParams() });
 };
 </script>
 
