@@ -19,7 +19,7 @@ export const isEnv = (str: string): boolean => {
     unionpay: /unionpay/i,
     ios: /iphone|ipad|ipod/i,
     android: /android/i,
-    xiang: /xiang/i,
+    yourBridgeName: /yourBridgeName/i,
   };
   return envList[str].test(window.navigator.userAgent.toLowerCase());
 };
@@ -310,7 +310,7 @@ export function backward(): void {
   if (historyCountAll - 1 > 0) {
     history.go(-1);
   } else {
-    bridgeInvoke.bbb(); // 没有历史记录，关闭webview
+    bridgeInvoke.closeWebview(); // 没有历史记录，关闭webview
   }
 }
 
@@ -326,7 +326,7 @@ export function backHome(): void {
     // 返回多步时 router.beforeEach守卫只走一次 此时减去1步 会计数错误 因此 返回首页时直接重置为2 守卫只走一次会减少到1 replace记录也重置0
     sessionStorage.setItem('countAll', '1');
   } else {
-    bridgeInvoke.bbb(); // 已经在首页了 直接关闭webview
+    bridgeInvoke.closeWebview(); // 已经在首页了 直接关闭webview
   }
 }
 
@@ -383,7 +383,7 @@ export function addTimertampParams(params: CommonType = {}): CommonType {
 // 客户端方法 actionName客户端api名称 actionVersion要校验的版本
 export async function bridgeInvokeCheck(options: BridgeInvokeCheckOptions) {
   try {
-    const canIUse = await bridgeInvoke.aaa({
+    const canIUse = await bridgeInvoke.canIUse({
       action_name: options.actionName,
       action_version: options.actionVersion || '1',
     });

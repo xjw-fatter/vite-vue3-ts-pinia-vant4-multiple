@@ -7,7 +7,7 @@ declare module '*.vue' {
 }
 
 interface Window {
-  xiangJsBridge: any;
+  yourBridgeNameJsBridge: any;
 }
 
 interface ImportMetaEnv {

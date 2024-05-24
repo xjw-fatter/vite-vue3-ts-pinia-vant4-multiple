@@ -3,7 +3,7 @@ export interface CommonType {
 }
 
 export type AppActionName =
-	'aaa' | 'bbb' | 'getInfo';
+	'canIUse' | 'closeWebview' | 'getInfo';
 
 export interface BridgeInvokeCheckOptions {
 	actionName: AppActionName,

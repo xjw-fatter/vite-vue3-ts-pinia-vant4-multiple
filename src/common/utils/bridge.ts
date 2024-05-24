@@ -8,11 +8,11 @@ const rejectMessage = (data: any, reject: (msg: string) => void) => {
 
 const invoke = <T = any>(api: string, params: any = {}, success?: Function) => {
   return new Promise<T>((resolve, reject) => {
-    if (!window.xiangJsBridge) {
+    if (!window.yourBridgeNameJsBridge) {
       if (import.meta.env.DEV) return;
-      return rejectMessage('当前xiangJsBridge还未注入', reject);
+      return rejectMessage('当前yourBridgeNameJsBridge还未注入', reject);
     }
-    window.xiangJsBridge.invoke(
+    window.yourBridgeNameJsBridge.invoke(
       api,
       { params: typeof params === 'string' ? params : JSON.stringify(params) },
       (error: number | string, data: any) => {
@@ -26,6 +26,6 @@ const invoke = <T = any>(api: string, params: any = {}, success?: Function) => {
 
 export default {
   getInfo: () => invoke<UserInfo>('TestInfo'),
-  aaa: (params: any, success?: Function) => invoke('aaa', params, success),
-  bbb: () => invoke('bbb'),
+  canIUse: (params: any, success?: Function) => invoke('canIUse', params, success),
+  closeWebview: () => invoke('closeWebview'),
 };

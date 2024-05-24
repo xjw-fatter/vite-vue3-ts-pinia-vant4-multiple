@@ -19,7 +19,7 @@ import { useEventListener } from '@/common/hooks/index';
 // store
 import commonStore from '@/common/store/common.store';
 
-const isxiang = isEnv('xiang');
+const isyourBridgeName = isEnv('yourBridgeName');
 const useCommonStore = commonStore();
 const { direction, keepAliveComponents } = storeToRefs(useCommonStore);
 const transitionClass = computed(() => {
@@ -30,7 +30,7 @@ const transitionClass = computed(() => {
 watch(
   () => router.currentRoute.value.path,
   (newValue: string) => {
-    if (!isxiang && newValue !== '/') {
+    if (!isyourBridgeName && newValue !== '/') {
       setTimeout(() => {
         useCommonStore.updateFlag(true);
         emitter.emit('authReady'); // 触发用户信息获取完成事件
@@ -53,7 +53,7 @@ const authReady = debounce(async () => {
     showFailToast('获取登录用户信息失败');
   }
 }, 200);
-useEventListener(document, 'xiangJsBridgeReady', authReady);
+isyourBridgeName && useEventListener(document, 'yourBridgeNameJsBridgeReady', authReady);
 </script>
 <style lang="less">
 @import url('../../assets/styles/entrance.less');

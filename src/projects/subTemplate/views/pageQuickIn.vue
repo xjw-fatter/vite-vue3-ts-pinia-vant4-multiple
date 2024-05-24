@@ -1,11 +1,16 @@
 <template>
-  <div>
+  <div class="home fs_32" v-if="showHome">
     <xx-header title="测试页面入口" background="none" />
-    <div class="home fs_32 pd-b_68 pd-t_92" v-if="showHome">
-      <router-link to="/pActivity/timeLimitBuy">测试页面1</router-link>
-      <router-link to="/pTest/test/testA">测试页面2</router-link>
+    <div class="content-wraper pd-t_92">
+      <div class="links">
+        <router-link to="/pActivity/timeLimitBuy">测试页面1</router-link>
+        <router-link to="/pTest/test/testA">测试页面2</router-link>
+        <router-link to="/pActivity/bridgeTest">bridge调试</router-link>
+      </div>
+      <div class="btns">
+        <van-button class="btn fs_32" @click="testToA()">去A页面</van-button>
+      </div>
     </div>
-    <van-button class="btn fs_32" @click="testToA()">去A页面</van-button>
   </div>
 </template>
 <script setup lang="ts" name="PageQuickIn">
@@ -18,17 +23,31 @@ const testToA = () => {
 </script>
 <style lang="less" scoped>
 .home {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  align-content: flex-start;
+  overflow-y: scroll;
+  height: 100vh;
   background-color: var(--lc-white);
 
-  a {
-    display: block;
-    padding: 20px;
-    width: 100%;
-    height: 60px;
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    align-items: center;
+
+    a {
+      display: block;
+      padding: 16px;
+      margin: 8px;
+    }
+  }
+
+  .btns {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    .btn {
+      margin: 8px;
+    }
   }
 }
 </style>
